@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>me.tsub.aws-vault</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>A135247F-12EA-41EF-8051-57A2F406BD46</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D3092ACD-881E-4FD9-90CB-B93BDA40C001</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>D3092ACD-881E-4FD9-90CB-B93BDA40C001</key>
+		<array/>
+	</dict>
+	<key>createdby</key>
+	<string>Tsubasa Takayama</string>
+	<key>description</key>
+	<string>A Alfred workflow to open the AWS Management Console with aws-vault</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>aws-vault</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>profile=$1
+
+open -na 'Google Chrome' --args --incognito --user-data-dir=$HOME/Library/Application\ Support/Google/Chrome/aws-vault/$profile $(/usr/local/bin/aws-vault login -s $profile)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D3092ACD-881E-4FD9-90CB-B93BDA40C001</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>aws-vault</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Loading...</string>
+				<key>script</key>
+				<string>credentials=$(/usr/local/bin/aws-vault list --credentials)
+
+items=()
+for credential in $credentials; do
+  items+="{ \"title\": \"$credential\", \"arg\": \"$credential\" },"
+done
+
+echo "{ \"items\": [$items] }"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Open the AWS Management Console with aws-vault</string>
+				<key>title</key>
+				<string>aws-vault</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>A135247F-12EA-41EF-8051-57A2F406BD46</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>A135247F-12EA-41EF-8051-57A2F406BD46</key>
+		<dict>
+			<key>xpos</key>
+			<integer>60</integer>
+			<key>ypos</key>
+			<integer>205</integer>
+		</dict>
+		<key>D3092ACD-881E-4FD9-90CB-B93BDA40C001</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>205</integer>
+		</dict>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>0.0.1</string>
+	<key>webaddress</key>
+	<string>https://github.com/tsub/alfred-aws-vault-workflow</string>
+</dict>
+</plist>
