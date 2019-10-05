@@ -4,9 +4,7 @@ A Alfred workflow to open the AWS Management Console with [aws-vault].
 
 This workflow is inspired by [aws\-vault loginでChromeのウィンドウをAWSアカウント毎に分離する \- Qiita](https://qiita.com/minamijoyo/items/f3cbb003a34954a32970) (written in Japanese).
 
-## Features
-
-TODO: Upload GIF image
+![image](https://i.gyazo.com/33341687e0419d3863f913a00997744c.gif)
 
 ## Requirements
 
