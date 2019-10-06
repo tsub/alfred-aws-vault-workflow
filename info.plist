@@ -8,6 +8,19 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
+		<key>600F8820-A39F-4802-ACA1-D70841FCDEBF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D5822852-C233-4BFD-9915-4614E0FBA5C1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>A135247F-12EA-41EF-8051-57A2F406BD46</key>
 		<array>
 			<dict>
@@ -22,7 +35,31 @@
 			</dict>
 		</array>
 		<key>D3092ACD-881E-4FD9-90CB-B93BDA40C001</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>D5822852-C233-4BFD-9915-4614E0FBA5C1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>47A60B87-0620-4140-9D41-2D9632BE94B9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Tsubasa Takayama</string>
@@ -42,9 +79,27 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>profile=$1
+				<string>if [ ! -r ./browser ]; then
+  echo "Please run 'aws-vault set-browser' first in Alfred"
+  exit 0
+fi
 
-open -na 'Google Chrome' --args --incognito --user-data-dir=$HOME/Library/Application\ Support/Google/Chrome/aws-vault/$profile $(/usr/local/bin/aws-vault login -s $profile)</string>
+profile=$1
+browser=$(cat ./browser)
+loginUrl=$(/usr/local/bin/aws-vault login -s $profile)
+
+case "$browser" in
+  "chrome" )
+    open -na 'Google Chrome' --args --incognito --user-data-dir=$HOME/Library/Application\ Support/Google/Chrome/aws-vault/$profile $loginUrl
+    ;;
+  "firefox" )
+    encodedLoginUrl="${loginUrl//&amp;/%26}"
+    open -na Firefox --args "ext+container:name=$profile&amp;url=$encodedLoginUrl"
+    ;;
+  * )
+    echo "Unsupported browser. Please run 'aws-vault set-browser' again in Alfred"
+    ;;
+esac</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -58,6 +113,27 @@ open -na 'Google Chrome' --args --incognito --user-data-dir=$HOME/Library/Applic
 			<string>D3092ACD-881E-4FD9-90CB-B93BDA40C001</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>alfred-aws-vault-workflow error</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -115,15 +191,109 @@ echo "{ \"items\": [$items] }"</string>
 			<key>version</key>
 			<integer>3</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>adduuid</key>
+				<false/>
+				<key>allowemptyfiles</key>
+				<true/>
+				<key>createintermediatefolders</key>
+				<true/>
+				<key>filename</key>
+				<string>browser</string>
+				<key>filetext</key>
+				<string>{query}</string>
+				<key>relativepathmode</key>
+				<integer>1</integer>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.writefile</string>
+			<key>uid</key>
+			<string>47A60B87-0620-4140-9D41-2D9632BE94B9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>aws-vault set-browser</string>
+				<key>subtext</key>
+				<string>Setup a browser to open the AWS Management Console</string>
+				<key>text</key>
+				<string>aws-vault set-browser</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>600F8820-A39F-4802-ACA1-D70841FCDEBF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>fixedorder</key>
+				<false/>
+				<key>items</key>
+				<string>[{"imagefile":"c4c7f42f44ce8bce7278c8e6d3878209d43087c6.png","title":"Google Chrome","arg":"chrome","subtitle":""},{"imagefile":"c0e3f3bb59be8d7e4f6104c6e04e41c2ad3a726b.png","title":"Firefox","arg":"firefox","subtitle":"Required \"Multi-Account Containers\" extension and \"Open external links in a container\" extension"}]</string>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.listfilter</string>
+			<key>uid</key>
+			<string>D5822852-C233-4BFD-9915-4614E0FBA5C1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
 	<key>uidata</key>
 	<dict>
+		<key>47A60B87-0620-4140-9D41-2D9632BE94B9</key>
+		<dict>
+			<key>xpos</key>
+			<integer>525</integer>
+			<key>ypos</key>
+			<integer>390</integer>
+		</dict>
+		<key>600F8820-A39F-4802-ACA1-D70841FCDEBF</key>
+		<dict>
+			<key>xpos</key>
+			<integer>55</integer>
+			<key>ypos</key>
+			<integer>390</integer>
+		</dict>
 		<key>A135247F-12EA-41EF-8051-57A2F406BD46</key>
 		<dict>
 			<key>xpos</key>
 			<integer>60</integer>
+			<key>ypos</key>
+			<integer>205</integer>
+		</dict>
+		<key>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>525</integer>
 			<key>ypos</key>
 			<integer>205</integer>
 		</dict>
@@ -133,6 +303,13 @@ echo "{ \"items\": [$items] }"</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<integer>205</integer>
+		</dict>
+		<key>D5822852-C233-4BFD-9915-4614E0FBA5C1</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>390</integer>
 		</dict>
 	</dict>
 	<key>variablesdontexport</key>
