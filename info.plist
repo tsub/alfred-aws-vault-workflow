@@ -135,39 +135,18 @@ echo "{ \"items\": [$items] }"</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<true/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>alfred-aws-vault-workflow error</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>if [ ! -r ./browser ]; then
+				<string>if [ ! -r "$alfred_workflow_data/browser" ]; then
   echo "Please run 'aws-vault set-browser' first in Alfred"
   exit 0
 fi
 
 profile=$1
-browser=$(cat ./browser)
+browser=$(cat "$alfred_workflow_data/browser")
 loginUrl=$(/usr/local/bin/aws-vault login -s $profile)
 
 if [[ "$loginUrl" != https://* ]]; then
@@ -204,10 +183,31 @@ esac</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>alfred-aws-vault-workflow error</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>adduuid</key>
 				<false/>
 				<key>allowemptyfiles</key>
-				<true/>
+				<false/>
 				<key>createintermediatefolders</key>
 				<true/>
 				<key>filename</key>
@@ -215,7 +215,7 @@ esac</string>
 				<key>filetext</key>
 				<string>{query}</string>
 				<key>relativepathmode</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>type</key>
 				<integer>1</integer>
 			</dict>
@@ -325,7 +325,7 @@ esac</string>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>0.0.1</string>
+	<string>0.0.2</string>
 	<key>webaddress</key>
 	<string>https://github.com/tsub/alfred-aws-vault-workflow</string>
 </dict>
