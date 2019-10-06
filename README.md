@@ -1,5 +1,7 @@
 # alfred-aws-vault-workflow
 
+[![version](https://img.shields.io/github/v/release/tsub/alfred-aws-vault-workflow?color=blue&sort=semver)](https://github.com/tsub/alfred-aws-vault-workflow/releases)
+
 A Alfred workflow to open the AWS Management Console with [aws-vault].
 
 This workflow is inspired by [aws\-vault loginでChromeのウィンドウをAWSアカウント毎に分離する \- Qiita](https://qiita.com/minamijoyo/items/f3cbb003a34954a32970) (written in Japanese).
