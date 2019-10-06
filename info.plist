@@ -74,70 +74,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>if [ ! -r ./browser ]; then
-  echo "Please run 'aws-vault set-browser' first in Alfred"
-  exit 0
-fi
-
-profile=$1
-browser=$(cat ./browser)
-loginUrl=$(/usr/local/bin/aws-vault login -s $profile)
-
-case "$browser" in
-  "chrome" )
-    open -na 'Google Chrome' --args --incognito --user-data-dir=$HOME/Library/Application\ Support/Google/Chrome/aws-vault/$profile $loginUrl
-    ;;
-  "firefox" )
-    encodedLoginUrl="${loginUrl//&amp;/%26}"
-    open -na Firefox --args "ext+container:name=$profile&amp;url=$encodedLoginUrl"
-    ;;
-  * )
-    echo "Unsupported browser. Please run 'aws-vault set-browser' again in Alfred"
-    ;;
-esac</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>D3092ACD-881E-4FD9-90CB-B93BDA40C001</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<true/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>alfred-aws-vault-workflow error</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>alfredfiltersresults</key>
 				<true/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -170,6 +106,11 @@ for credential in $credentials; do
   items+="{ \"title\": \"$credential\", \"arg\": \"$credential\" },"
 done
 
+if [ "$items" = "" ]; then
+  echo "{ \"items\": [{ \"title\": \"Does not found profiles\", \"subtitle\": \"Please run '$ aws-vault add [profile]' first in your teminal\" }] }"
+  exit 0
+fi
+
 echo "{ \"items\": [$items] }"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
@@ -190,6 +131,75 @@ echo "{ \"items\": [$items] }"</string>
 			<string>A135247F-12EA-41EF-8051-57A2F406BD46</string>
 			<key>version</key>
 			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>alfred-aws-vault-workflow error</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>C5B9AB0B-593A-442D-BA56-3537A59ACA3E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>if [ ! -r ./browser ]; then
+  echo "Please run 'aws-vault set-browser' first in Alfred"
+  exit 0
+fi
+
+profile=$1
+browser=$(cat ./browser)
+loginUrl=$(/usr/local/bin/aws-vault login -s $profile)
+
+if [[ "$loginUrl" != https://* ]]; then
+  echo "'$ aws-vault login -s $profile' is failed. Please check credentials for '$profile' profile"
+  exit 0  
+fi
+
+case "$browser" in
+  "chrome" )
+    open -na 'Google Chrome' --args --incognito --user-data-dir=$HOME/Library/Application\ Support/Google/Chrome/aws-vault/$profile $loginUrl
+    ;;
+  "firefox" )
+    encodedLoginUrl="${loginUrl//&amp;/%26}"
+    open -na Firefox --args "ext+container:name=$profile&amp;url=$encodedLoginUrl"
+    ;;
+  * )
+    echo "Unsupported browser. Please run 'aws-vault set-browser' again in Alfred"
+    ;;
+esac</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D3092ACD-881E-4FD9-90CB-B93BDA40C001</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -219,6 +229,33 @@ echo "{ \"items\": [$items] }"</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>fixedorder</key>
+				<false/>
+				<key>items</key>
+				<string>[{"imagefile":"c4c7f42f44ce8bce7278c8e6d3878209d43087c6.png","title":"Google Chrome","arg":"chrome","subtitle":""},{"imagefile":"c0e3f3bb59be8d7e4f6104c6e04e41c2ad3a726b.png","title":"Firefox","arg":"firefox","subtitle":"Require \"Multi-Account Containers\" extension and \"Open external links in a container\" extension"}]</string>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.listfilter</string>
+			<key>uid</key>
+			<string>D5822852-C233-4BFD-9915-4614E0FBA5C1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -234,33 +271,6 @@ echo "{ \"items\": [$items] }"</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>600F8820-A39F-4802-ACA1-D70841FCDEBF</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>fixedorder</key>
-				<false/>
-				<key>items</key>
-				<string>[{"imagefile":"c4c7f42f44ce8bce7278c8e6d3878209d43087c6.png","title":"Google Chrome","arg":"chrome","subtitle":""},{"imagefile":"c0e3f3bb59be8d7e4f6104c6e04e41c2ad3a726b.png","title":"Firefox","arg":"firefox","subtitle":"Required \"Multi-Account Containers\" extension and \"Open external links in a container\" extension"}]</string>
-				<key>runningsubtext</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string></string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.listfilter</string>
-			<key>uid</key>
-			<string>D5822852-C233-4BFD-9915-4614E0FBA5C1</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -300,7 +310,7 @@ echo "{ \"items\": [$items] }"</string>
 		<key>D3092ACD-881E-4FD9-90CB-B93BDA40C001</key>
 		<dict>
 			<key>xpos</key>
-			<integer>300</integer>
+			<integer>305</integer>
 			<key>ypos</key>
 			<integer>205</integer>
 		</dict>
